@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>US Quiz</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js" ></script>
+    <meta name="viewport" content="width=device-width">
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        
+        var score = 0;
+        var attempts = localStorage.getItem("total_attempts");
+        $("button").on("click", gradeQuiz);
+        
+        //functions
+        $(".q5Choice").on("click", function() {
+          $(".q5Choice").css("background", "");
+          $(this).css("background", "rgb(255,255,0)");
+        });
+        function displayQ4Choices(){
+          let q4ChoicesArray = ["Maine", "Rhode Island", "Maryland", "Delaware"];
+          q4ChoicesArray = _.shuffle(q4ChoicesArray);
+          for (let i = 0; i < q4ChoicesArray.length; i++){
+            $("#q4Choices").append(` <input type="radio" name="q4" id="${q4ChoicesArray[i]}" value="${q4ChoicesArray[i]}"> <label for="${q4ChoicesArray[i]}">${q4ChoicesArray[i]}</label>`);
+          }
+          
+        }
+        displayQ4Choices();
+        function isFormValid(){
+          let isValid = true;
+          if ($("#q1").val() == ""){
+            isValid = false;
+            $("#validationFdbk").html("Question 1 was not answered");
+          }
+          return isValid;
+        }
+        function rightAnswer(index) {
+          $(`#q${index}Feedback`).html("Correct!");
+          $(`#q${index}Feedback`).attr("class", "bg-success text-white");
+          $(`#markImg${index}`).html("<img src='img/checkmark.png' alt='checkmark'>");
+          score = score + 20;
+        }
+        function rightAnswer2(index) {
+          $(`#q${index}Feedback`).html("Correct!");
+          $(`#q${index}Feedback`).attr("class", "bg-success text-white");
+          $(`#markImg${index}`).html("<img src='img/checkmark.png' alt='checkmark'>");
+          score = score + 12.50;
+        }
+        function wrongAnswer(index){
+          $(`#q${index}Feedback`).html("Incorrect!");
+          $(`#q${index}Feedback`).attr("class", "bg-warning text-white");
+          $(`#markImg${index}`).html("<img src='img/xmark.png' alt='xmark'>");
+  
+        }
+        function gradeQuiz(){
+          $("#validationFdbk").html("");
+          if (!isFormValid()) {
+            return;
+          }
+          score = 0;
+          //variables;
+          let q1Response = $("#q1").val().toLowerCase();
+          let q2Response = $("#q2").val();
+          let q4Response = $("input[name=q4]:checked").val();
+          let q7Response = $("#q7").val().toLowerCase();
+          let q8Response = $("#q8").val();
+
+          //question1
+          if(q1Response == "sacramento") {
+            rightAnswer(1);
+          }else{
+            wrongAnswer(1);
+          }
+          //q7
+          if(q7Response == "tokyo") {
+            rightAnswer2(7);
+          }else{
+            wrongAnswer(7);
+          }
+          //question2
+          if(q2Response == "mo") {
+            rightAnswer(2);
+          }else{
+            wrongAnswer(2);
+          }
+          
+          //qyestion7
+          if(q8Response == "mu") {
+            rightAnswer2(8);
+          }else{
+            wrongAnswer(8);
+          }
+          
+
+          //question3
+          if ($("#Jefferson").is(":checked") && $("#Roosevelt").is(":checked") && !$("#Jackson").is(":checked") && !$("#Franklin").is(":checked")){
+            rightAnswer(3);
+          }
+          else{
+            wrongAnswer(3);
+          }
+          if(q4Response == "Rhode Island"){
+            rightAnswer(4);
+          }
+          else{
+            wrongAnswer(4);
+          }
+          //question5
+          if($("#seal2").css("background-color") == "rgb(255, 255, 0)"){
+            rightAnswer(5);
+          }else{
+            wrongAnswer(5);
+          }
+
+          if ($("#cool").is(":checked") && $("#smart").is(":checked") && $("#nice").is(":checked") && $("#funny").is(":checked")){
+            rightAnswer2(6);
+          }
+          else{
+            wrongAnswer(6);
+          }
+          if(q4Response == "Rhode Island"){
+            rightAnswer(4);
+          }
+          else{
+            wrongAnswer(4);
+          }
+
+          $("#totalScore").css("background", "");
+          $("#totalScore").css("background", "rgb(255,0,0)");
+          if(score >= 80){
+             $("#totalScore").css("background", "rgb(0,255,0)");
+             $("#Congrats").html("Congratulations!");
+             $("#Congrats").css("background", "rgb(0,255,0)");
+          }
+          else{
+            $("#Congrats").html("");
+          }
+          $("#totalScore").html(`Total Score: ${score}`);
+          $("#totalAttempts").html(`Total Attempts: ${++attempts}`);
+          localStorage.setItem("total_attempts", attempts);
+        }
+    
+
+
+      })//ready
+    </script>
+  </head>
+  <body class="text-center">
+      <h1 class="jumbotron">US Quiz</h1>
+        <h3><span id="markImg1"></span>What is the capital of California?</h3>
+        <input type="text" id="q1">
+        <br><br>
+        <div id="q1Feedback"></div>
+        <br><br>
+
+
+        <h3><span id="markImg2"></span>What is the longest river?</h3>
+        <select id="q2">
+          <option value="">Select One</option>
+          <option value="ms">Mississippi</option>
+          <option value="mo">Missouri</option>
+          <option value="co">Colorado</option>
+          <option value="de">Delaware</option>
+        </select>
+        <br><br>
+        <div id="q2Feedback"></div>
+        <br>
+
+
+        <h3><span id="markImg3"></span>What presidents are carved into mount Rushmore?</h3>
+        <input type="checkbox" id="Jackson"><label for="Jackson">A.Jackson </label>
+        <input type="checkbox" id="Franklin"><label for="Franklin">B. Franklin </label>
+        <input type="checkbox" id="Jefferson"><label for="Jefferson">T. Jefferson </label>
+        <input type="checkbox" id="Roosevelt"><label for="Roosevelt">T.Roosevelt </label>
+        <br><br>
+        <div id="q3Feedback"></div>
+        <br>
+
+        <h3><span id="markImg4"></span>What is the smallest US state?</h3>
+        <div id="q4Choices"></div>
+        <div id="q4Feedback"></div>
+        <br><br>
+
+
+        <h3><span id="markImg5"></span>What image is in the Great Seal of the State of California?</h3>
+        <img src="img/seal1.png" alt="Seal 1" class="q5Choice" id="seal1">
+        <img src="img/seal2.png" alt="Seal 2" class="q5Choice" id="seal2">
+        <img src="img/seal3.png" alt="Seal 3" class="q5Choice" id="seal3">
+        <div id="q5Feedback"></div>
+        <br><br>
+
+
+        <h3><span id="markImg6"></span>What am I?</h3>
+        <input type="checkbox" id="smart"><label for="smart">Smart </label>
+        <input type="checkbox" id="nice"><label for="nice">Nice </label>
+        <input type="checkbox" id="funny"><label for="funny">Funny </label>
+        <input type="checkbox" id="cool"><label for="cool">Cool </label>
+        <br><br>
+        <div id="q6Feedback"></div>
+        <br><br>
+
+        <h3><span id="markImg7"></span>What is the most populated city in the world?</h3>
+        <input type="text" id="q7">
+        <br><br>
+        <div id="q7Feedback"></div>
+        <br><br>
+
+        <h3><span id="markImg8"></span>What is a flock of crows called?</h3>
+        <select id="q8">
+          <option value="">Select One</option>
+          <option value="cr">A crutch</option>
+          <option value="mu">A murder</option>
+          <option value="cl">A clouder</option>
+          <option value="ob">An oblivion</option>
+        </select>
+        <br><br>
+        <div id="q8Feedback"></div>
+
+        <h3 id="validationFdbk" class="bg-danger text-white"></h3>
+        <button class="btn btn-primary"> Submit Quiz </button>
+        <br>
+        <h3 id="Congrats"></h3>
+        <h2 id="totalScore" class="text-info"></h2>
+        <h3 id="totalAttempts"></h3>
+  </body>
+
+
+  <body>
+    <script src="script.js"></script>
+  </body>
+</html>
